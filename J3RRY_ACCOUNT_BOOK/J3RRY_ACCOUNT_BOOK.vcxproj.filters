@@ -30,7 +30,7 @@
     <ClCompile Include="src\llist.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="db_connect.c">
+    <ClCompile Include="src\db_connect.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,7 +50,7 @@
     <ClInclude Include="src\process_record.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="db_connect.h">
+    <ClInclude Include="src\db_connect.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

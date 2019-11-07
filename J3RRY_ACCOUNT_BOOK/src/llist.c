@@ -7,6 +7,10 @@ llist * llist_create(void* new_data)
 	struct node* new_node;
 
 	llist* new_list = (llist*)malloc(sizeof(llist));
+	while (new_list == NULL)
+	{
+		new_list = (llist*)malloc(sizeof(llist));
+	}
 	*new_list = (struct node*)malloc(sizeof(struct node));
 
 	new_node = *new_list;

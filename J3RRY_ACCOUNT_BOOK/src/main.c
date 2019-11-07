@@ -2,29 +2,13 @@
 #include <stdlib.h>
 #include "model.h"
 #include "include/sqlite/sqlite3.h"
-#include "../db_connect.h"
-
+#include "db_connect.h"
+sqlite3* db;
 
 int main(int argc, char *argv[]){
-	int rc = sqlite3_open("test.db", db);
-    
-    char file_buffer[1024 * 2];
-	FILE* file = fopen("./src/sql/db.sql","r");
-    if(file) {
-        int index = 0;
-        int c;
-        while((c = getc(file)) != EOF) {
-            file_buffer[index++] = c;
-        }
-        file_buffer[index] = '\0';
-    }
-    rc = sqlite3_exec(db,file_buffer,NULL,0,&zErrMsg);
-    if (rc != SQLITE_OK) {
-        fprintf(stderr, "SQL error: %s\n", zErrMsg);
-        sqlite3_free(zErrMsg);
-    } else {
-        fprintf(stdout, "Table created successfully\n");
-    }
+	// Init database connection;
+	connect("test.db");
+	init_db("./src/sql/db.sql");
 	user result = getUserById(db, 1);
 	transaction_class a = getTransactionClassByID(db, 1);
 	transaction hkb = getTransactionByID(db, 1);

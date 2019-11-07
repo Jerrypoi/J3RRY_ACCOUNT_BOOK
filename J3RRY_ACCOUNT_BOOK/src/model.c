@@ -10,7 +10,7 @@ static int callback_user(void* list, int argc, char** argv, char** azColName) {
 	if (!u) {
 		return -1;
 	}
-	u->id = atoi(argv[0]);
+	u->id = strtol(argv[0], NULL, 10);
 	u->name = (char*)malloc(sizeof(char) * strlen(argv[1]));
 	if (argv[1] && u->name) {
 		
@@ -47,7 +47,7 @@ static int callback(void* NotUsed, int argc, char** argv, char** azColName) {
 	printf("\n");
 	return 0;
 }
-user getUserById(sqlite3 *db,int id) {
+user getUserById(sqlite3 *db,const int id) {
 	user* data = (user*)malloc(sizeof(user*));
 	if (!data)
 		return;
@@ -100,7 +100,7 @@ static int callback_transaction(void* list, int argc, char** argv, char** azColN
 	llist_push((llist*)list, data);
 	return 0;
 }
-transaction_class getTransactionClassByID(sqlite3 *db,int id) {
+transaction_class getTransactionClassByID(sqlite3 *db, const int id) {
 	char sql[1024] = { 0 };
 	llist* list = llist_create(NULL);
 	sprintf(sql, "select * from transaction_classes where id = %d;",id);
@@ -152,7 +152,7 @@ bool insertIntoTransactionClass(sqlite3* db, int id, char* class_name) {
 }
 
 // Insert into transaction table. Set id = 0 to auto select id. Note that transaction date should be in correct format.
-bool insertIntoTransactions(sqlite3* db, int id, bool type, double amount, int class_id, int user_id, char* transaction_date) {
+bool insertIntoTransactions(sqlite3* db, const int id, const bool type, const double amount, const int class_id, const int user_id, char* transaction_date) {
 	char* zErrMsg = 0;
 	char sql[1024] = { 0 };
 	if (id != 0)

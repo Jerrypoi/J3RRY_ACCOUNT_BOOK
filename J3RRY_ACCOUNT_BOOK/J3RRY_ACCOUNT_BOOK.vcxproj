@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="db_connect.c" />
+    <ClCompile Include="src\db_connect.c" />
     <ClCompile Include="src\include\sqlite\shell.c" />
     <ClCompile Include="src\include\sqlite\sqlite3.c" />
     <ClCompile Include="src\llist.c" />
@@ -27,7 +27,7 @@
     <ClCompile Include="src\model.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="db_connect.h" />
+    <ClInclude Include="src\db_connect.h" />
     <ClInclude Include="src\include\sqlite\sqlite3.h" />
     <ClInclude Include="src\include\sqlite\sqlite3ext.h" />
     <ClInclude Include="src\llist.h" />

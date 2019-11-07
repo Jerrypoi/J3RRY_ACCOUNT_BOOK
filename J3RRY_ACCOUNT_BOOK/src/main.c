@@ -7,8 +7,9 @@ sqlite3* db;
 
 int main(int argc, char *argv[]){
 	// Init database connection;
-	connect("test.db");
+	connect("test.db"); // 创建数据库连接
 	init_db("./src/sql/db.sql");
+
 	user result = getUserById(db, 1);
 	transaction_class a = getTransactionClassByID(db, 1);
 	transaction hkb = getTransactionByID(db, 1);

@@ -4,7 +4,7 @@
 
 #include "model.h"
 
-static int callback_user(void* list, int argc, char** argv, char** azColName) {
+int callback_user(void* list, int argc, char** argv, char** azColName) {
 	// The order of this should not be changed.
 	user* u = (user*)malloc(sizeof(user));
 	if (!u) {
@@ -37,9 +37,9 @@ static int callback_user(void* list, int argc, char** argv, char** azColName) {
 	return 0;
 }
 /**
- * 
+ * Callback 函数，输出 SQL 执行结果
  */
-static int callback(void* NotUsed, int argc, char** argv, char** azColName) {
+int callback(void* NotUsed, int argc, char** argv, char** azColName) {
 	int i;
 	for (i = 0; i < argc; i++) {
 		printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
@@ -47,10 +47,19 @@ static int callback(void* NotUsed, int argc, char** argv, char** azColName) {
 	printf("\n");
 	return 0;
 }
+/**
+ * 根据用户 id 获取用户数据
+ * @param id 用户id，int
+ * @param db 数据库连接
+ */
 user getUserById(sqlite3 *db,const int id) {
-	user* data = (user*)malloc(sizeof(user*));
+	user* data = (user*)malloc(sizeof(user));
 	if (!data)
-		return;
+	{
+		const user u = {-1,"NULL","NULL","NULL"};
+		return u;
+	}
+		
 	data->id = 250;
 	data->name = "FK";
 	data->password = "NO";
@@ -61,7 +70,7 @@ user getUserById(sqlite3 *db,const int id) {
 	sqlite3_exec(db, sql, callback_user, list, NULL);
 	return *((user*)((*list)->data));
 }
-static int callback_transaction_class(void* list, int argc, char** argv, char** azColName) {
+int callback_transaction_class(void* list, int argc, char** argv, char** azColName) {
 	// The order of this should not be changed.
 	transaction_class* data = (transaction_class *)malloc(sizeof(transaction_class));
 	if (!data) {
@@ -79,7 +88,14 @@ static int callback_transaction_class(void* list, int argc, char** argv, char** 
 	llist_push((llist*)list, data);
 	return 0;
 }
-static int callback_transaction(void* list, int argc, char** argv, char** azColName) {
+transaction_class getTransactionClassByID(sqlite3* db, const int id) {
+	char sql[1024] = { 0 };
+	llist* list = llist_create(NULL);
+	sprintf(sql, "select * from transaction_classes where id = %d;", id);
+	sqlite3_exec(db, sql, callback_transaction_class, list, NULL);
+	return *((transaction_class*)((*list)->data));
+}
+int callback_transaction(void* list, int argc, char** argv, char** azColName) {
 	// The order of this should not be changed.
 	transaction* data = (transaction*)malloc(sizeof(transaction));
 	if (!data) {
@@ -100,21 +116,38 @@ static int callback_transaction(void* list, int argc, char** argv, char** azColN
 	llist_push((llist*)list, data);
 	return 0;
 }
-transaction_class getTransactionClassByID(sqlite3 *db, const int id) {
-	char sql[1024] = { 0 };
-	llist* list = llist_create(NULL);
-	sprintf(sql, "select * from transaction_classes where id = %d;",id);
-	sqlite3_exec(db, sql, callback_transaction_class, list, NULL);
-	return *((transaction_class *)((*list)->data));
-}
-transaction getTransactionByID(sqlite3 *db,int id) {
+transaction getTransactionByID(sqlite3 *db, const int id) {
 	char sql[1024] = { 0 };
 	llist* list = llist_create(NULL);
 	sprintf(sql, "select * from transactions;");
 	sqlite3_exec(db, sql, callback_transaction, list, NULL);
 	return *((transaction *)((*list)->data));
 }
+llist* getAllTransaction()
+{
+	llist* result = llist_create(NULL);
+	char sql[1024];
+	sprintf(sql, "select * from transactions;");
+	sqlite3_exec(db, sql, callback_transaction, result, NULL);
+	return result;
+}
 
+llist* getAllTransactionClass()
+{
+	llist* result = llist_create(NULL);
+	char sql[1024];
+	sprintf(sql, "select * from transaction_classes;");
+	sqlite3_exec(db, sql, callback_transaction_class, result, NULL);
+	return result;
+}
+llist* getAllUser()
+{
+	llist* result = llist_create(NULL);
+	char sql[1024];
+	sprintf(sql, "select * from user;");
+	sqlite3_exec(db, sql, callback_user, result, NULL);
+	return result;
+}
 // Insert into user table. Set id = 0 to auto select id.
 bool insertIntoUser(sqlite3* db, int id, char* name, char* password, char* email) {
 	char* zErrMsg = 0;
@@ -150,7 +183,6 @@ bool insertIntoTransactionClass(sqlite3* db, int id, char* class_name) {
 		return true;
 	}
 }
-
 // Insert into transaction table. Set id = 0 to auto select id. Note that transaction date should be in correct format.
 bool insertIntoTransactions(sqlite3* db, const int id, const bool type, const double amount, const int class_id, const int user_id, char* transaction_date) {
 	char* zErrMsg = 0;

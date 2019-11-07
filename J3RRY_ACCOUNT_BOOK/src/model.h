@@ -10,6 +10,7 @@
 #include <string.h>
 #include "llist.h"
 #include <stdlib.h>
+#include "db_connect.h"
 #include "include/sqlite/sqlite3.h"
 /*
 	
@@ -63,7 +64,20 @@ typedef struct transaction{
 user getUserById(sqlite3 *db,int id);
 transaction_class getTransactionClassByID(sqlite3 *db,int id);
 transaction getTransactionByID(sqlite3 *db,int id);
+llist* getAllTransaction();
+llist* getAllTransactionClass();
+llist* getAllUser();
 bool insertIntoUser(sqlite3* db, int id, char* name, char* password, char* email);
 bool insertIntoTransactionClass(sqlite3* db, int id, char* class_name);
 bool insertIntoTransactions(sqlite3* db, int id, bool type, double amount, int class_id, int user_id, char* transaction_date);
+/**
+ * Callback 函数，输出 SQL 执行结果
+ */
+int callback(void* NotUsed, int argc, char** argv, char** azColName);
+/**
+ * 标准 callback 函数，将结果存储进链表中
+ */
+int callback_transaction_class(void* list, int argc, char** argv, char** azColName);
+int callback_transaction(void* list, int argc, char** argv, char** azColName);
+int callback_user(void* list, int argc, char** argv, char** azColName);
 #endif // !MODEL_H

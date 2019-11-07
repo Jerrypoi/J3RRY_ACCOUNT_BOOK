@@ -25,6 +25,7 @@
     <ClCompile Include="src\llist.c" />
     <ClCompile Include="src\main.c" />
     <ClCompile Include="src\model.c" />
+    <ClCompile Include="src\process_record.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\db_connect.h" />

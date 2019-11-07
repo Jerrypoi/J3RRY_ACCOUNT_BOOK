@@ -33,6 +33,9 @@
     <ClCompile Include="src\db_connect.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\process_record.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\include\sqlite\sqlite3.h">

@@ -7,6 +7,8 @@
 TEST(TestCaseName, TestName) {
 	EXPECT_EQ(1, 1);
 	EXPECT_TRUE(true);
+	// 将数据库文件删除，重新开始创建数据库
+	remove("test.db");
 	bool result = db_connect("test.db");
 	ASSERT_EQ(result, true);
 	result = init_db("db.sql");

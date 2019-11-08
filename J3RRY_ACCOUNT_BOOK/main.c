@@ -7,7 +7,7 @@ sqlite3* db;
 
 int main(int argc, char *argv[]){
 	// Init database connection;
-	db_connect("test.db"); // ´´½¨Êý¾Ý¿âÁ¬½Ó
+	db_connect("db.db"); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½ï¿½ï¿½
 	init_db("./db.sql");
 
 	user result = getUserById(db, 1);

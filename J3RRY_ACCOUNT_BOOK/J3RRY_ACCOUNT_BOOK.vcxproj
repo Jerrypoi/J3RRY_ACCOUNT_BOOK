@@ -19,24 +19,24 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\db_connect.c" />
-    <ClCompile Include="src\include\sqlite\shell.c" />
-    <ClCompile Include="src\include\sqlite\sqlite3.c" />
-    <ClCompile Include="src\llist.c" />
-    <ClCompile Include="src\main.c" />
-    <ClCompile Include="src\model.c" />
-    <ClCompile Include="src\process_record.c" />
+    <ClCompile Include="db_connect.c" />
+    <ClCompile Include="include\sqlite\shell.c" />
+    <ClCompile Include="include\sqlite\sqlite3.c" />
+    <ClCompile Include="llist.c" />
+    <ClCompile Include="main.c" />
+    <ClCompile Include="model.c" />
+    <ClCompile Include="process_record.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\db_connect.h" />
-    <ClInclude Include="src\include\sqlite\sqlite3.h" />
-    <ClInclude Include="src\include\sqlite\sqlite3ext.h" />
-    <ClInclude Include="src\llist.h" />
-    <ClInclude Include="src\model.h" />
-    <ClInclude Include="src\process_record.h" />
+    <ClInclude Include="db_connect.h" />
+    <ClInclude Include="include\sqlite\sqlite3.h" />
+    <ClInclude Include="include\sqlite\sqlite3ext.h" />
+    <ClInclude Include="llist.h" />
+    <ClInclude Include="model.h" />
+    <ClInclude Include="process_record.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\sql\db.sql" />
+    <None Include="db.sql" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

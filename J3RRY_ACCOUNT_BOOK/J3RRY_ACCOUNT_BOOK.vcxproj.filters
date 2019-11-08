@@ -15,50 +15,50 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\main.c">
+    <ClCompile Include="model.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\model.c">
+    <ClCompile Include="process_record.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\include\sqlite\shell.c">
+    <ClCompile Include="db_connect.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="llist.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="main.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="include\sqlite\shell.c">
       <Filter>头文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\include\sqlite\sqlite3.c">
+    <ClCompile Include="include\sqlite\sqlite3.c">
       <Filter>头文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\llist.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\db_connect.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\process_record.c">
-      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\include\sqlite\sqlite3.h">
+    <ClInclude Include="model.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="process_record.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="db_connect.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="llist.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\sqlite\sqlite3.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\include\sqlite\sqlite3ext.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\model.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\llist.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\process_record.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\db_connect.h">
+    <ClInclude Include="include\sqlite\sqlite3ext.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\sql\db.sql">
+    <None Include="db.sql">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>

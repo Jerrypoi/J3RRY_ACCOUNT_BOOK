@@ -56,6 +56,9 @@
     <ClInclude Include="include\sqlite\sqlite3ext.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="暂未实现的功能.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="db.sql">

@@ -1,7 +1,7 @@
 create table 'user'(
     id integer primary key AUTOINCREMENT not null ,
-    name char(64),
-    password char(64),
+    name char(64) unique,
+    password char(256),
     email_addr text
 );
 

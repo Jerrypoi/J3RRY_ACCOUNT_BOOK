@@ -7,5 +7,4 @@
 #include "model.h"
 llist* getTransactionByUserId(const int user_id);
 
-
 #endif /*PROCESS_RECORD_H*/

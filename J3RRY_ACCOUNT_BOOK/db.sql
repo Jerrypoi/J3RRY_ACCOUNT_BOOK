@@ -7,7 +7,7 @@ create table 'user'(
 
 create table 'transaction_classes'(
     id integer primary key AUTOINCREMENT not null,
-    class_name char(64)
+    class_name char(64) unique
 );
 create table 'transactions'(
     id integer primary key AUTOINCREMENT not null,

@@ -62,13 +62,20 @@ extern "C" {
 		int user_id;
 		char* transaction_date;
 	} transaction;
-
-	user getUserById(sqlite3* db, int id);
-	transaction_class getTransactionClassByID(sqlite3* db, int id);
-	transaction getTransactionByID(sqlite3* db, int id);
+	/**
+	 * 下面一类函数是根据指定属性获取数据
+	 * 如果查找不成功，会返回 NULL
+	 */
+	user* getUserById(sqlite3* db, int id);
+	transaction_class* getTransactionClassByID(sqlite3* db, int id);
+	transaction* getTransactionByID(sqlite3* db, int id);
+	user* getUserByName(sqlite3* db, char* name);
+	transaction_class* getTransactionClassByName(sqlite3* db, char* name);
+	
 	llist* getAllTransaction();
 	llist* getAllTransactionClass();
 	llist* getAllUser();
+	
 	bool insertIntoUser(sqlite3* db, int id, char* name, char* password, char* email);
 	bool insertIntoTransactionClass(sqlite3* db, int id, char* class_name);
 	bool insertIntoTransactions(sqlite3* db, int id, bool type, double amount, int class_id, int user_id, char* transaction_date);

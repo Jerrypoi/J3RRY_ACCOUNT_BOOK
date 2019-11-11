@@ -36,6 +36,9 @@
     <ClCompile Include="include\sqlite\sqlite3.c">
       <Filter>头文件</Filter>
     </ClCompile>
+    <ClCompile Include="utilities.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="model.h">
@@ -57,6 +60,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="暂未实现的功能.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities.h">
       <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>

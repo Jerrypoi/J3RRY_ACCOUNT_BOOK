@@ -26,6 +26,7 @@
     <ClCompile Include="main.c" />
     <ClCompile Include="model.c" />
     <ClCompile Include="process_record.c" />
+    <ClCompile Include="utilities.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="db_connect.h" />
@@ -34,6 +35,7 @@
     <ClInclude Include="llist.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="process_record.h" />
+    <ClInclude Include="utilities.h" />
     <ClInclude Include="暂未实现的功能.h" />
   </ItemGroup>
   <ItemGroup>

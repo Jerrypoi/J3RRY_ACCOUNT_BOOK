@@ -1,4 +1,7 @@
 #pragma once
+#include "model.h"
+#include "db_connect.h"
+#include "llist.h"
 /**
 * @return 返回值为用户的 id，若登录失败返回 -1,
 * @param user_name 用户名，要求用户名具有唯一性，在注册时检测用户名是否唯一
@@ -29,7 +32,7 @@ int create_transaction_class(char* transaction_class);
  * @param type 收入还是支出，0 收入，1 支出
  * @param amount 交易金额
  * @param transaction_class_id 交易类别 id，调用这个函数前要调用 find_transaction_class 获取交易的 id
- * @param transaction_date 交易日期，如果为 NULL 则为系统时间的
+ * @param transaction_date 交易日期，如果为 NULL 则设置为系统时间的今天, 在 utilities.h 中有获取当前系统日期的函数。
  */
 bool record_transaction(int type, double amount, int transaction_class_id, char* transaction_date);
 

@@ -3,7 +3,11 @@
 //
 
 #include "model.h"
-
+/**
+ * Call back 函数，sqlite3_exec 执行完 sql 命令后调用 callback。其中，sqlite_exec3 会将它的第四个参数传入 callback 函数的第一个参数
+ * Call back 函数的 argv 是 sql 命令的执行结果，按列分开
+ * 
+ */
 int callback_user(void* list, int argc, char** argv, char** azColName) {
 	// The order of this should not be changed.
 	user* u = (user*)malloc(sizeof(user));
@@ -33,7 +37,7 @@ int callback_user(void* list, int argc, char** argv, char** azColName) {
 	else {
 		u->email_addr = NULL;
 	}
-	llist_push( (llist *)list, u);
+	llist_push( list, u);
 	return 0;
 }
 /**
@@ -47,32 +51,9 @@ int callback(void* NotUsed, int argc, char** argv, char** azColName) {
 	printf("\n");
 	return 0;
 }
-/**
- * 根据用户 id 获取用户数据
- * @param id 用户id，int
- * @param db 数据库连接
- */
-user getUserById(sqlite3 *db,const int id) {
-	user* data = (user*)malloc(sizeof(user));
-	if (!data)
-	{
-		const user u = {-1,"NULL","NULL","NULL"};
-		return u;
-	}
-		
-	data->id = 250;
-	data->name = "FK";
-	data->password = "NO";
-	data->email_addr = "FK";
-	char sql[1024] = { 0 };
-	llist *list = llist_create(NULL);
-	sprintf(sql, "select * from user where id = %d;", id);
-	sqlite3_exec(db, sql, callback_user, list, NULL);
-	return *((user*)((*list)->data));
-}
 int callback_transaction_class(void* list, int argc, char** argv, char** azColName) {
 	// The order of this should not be changed.
-	transaction_class* data = (transaction_class *)malloc(sizeof(transaction_class));
+	transaction_class* data = (transaction_class*)malloc(sizeof(transaction_class));
 	if (!data) {
 		return -1;
 	}
@@ -87,13 +68,6 @@ int callback_transaction_class(void* list, int argc, char** argv, char** azColNa
 	}
 	llist_push((llist*)list, data);
 	return 0;
-}
-transaction_class getTransactionClassByID(sqlite3* db, const int id) {
-	char sql[1024] = { 0 };
-	llist* list = llist_create(NULL);
-	sprintf(sql, "select * from transaction_classes where id = %d;", id);
-	sqlite3_exec(db, sql, callback_transaction_class, list, NULL);
-	return *((transaction_class*)((*list)->data));
 }
 int callback_transaction(void* list, int argc, char** argv, char** azColName) {
 	// The order of this should not be changed.
@@ -116,13 +90,75 @@ int callback_transaction(void* list, int argc, char** argv, char** azColName) {
 	llist_push((llist*)list, data);
 	return 0;
 }
-transaction getTransactionByID(sqlite3 *db, const int id) {
+
+/**
+ * 根据用户 id 获取用户数据
+ * sqlite3_exec() 这个函数的 list 参数会传入 callback_user 函数，因此在 callback_user 函数中将用户信息取出放入 list 中即可
+ * @param id 用户id，int
+ * @param db 数据库连接
+ */
+user* getUserById(sqlite3 *db,const int id) {
+	user* data = (user*)malloc(sizeof(user));
+	if (!data)
+	{
+		return NULL;
+	}
+	char sql[1024] = { 0 };
+	llist *list = llist_create(NULL);
+	sprintf(sql, "select * from user where id = %d;", id);
+	sqlite3_exec(db, sql, callback_user, list, NULL);
+	return (user*)((*list)->data);
+}
+// 根据名字获取用户信息
+user* getUserByName(sqlite3* db, char* name)
+{
+	user* data = (user*)malloc(sizeof(user));
+	if (!data)
+	{
+		return NULL;
+	}
+	char sql[1024] = { 0 };
+	llist* list = llist_create(NULL);
+	sprintf(sql, "select * from user where name = '%s';", name);
+	sqlite3_exec(db, sql, callback_user, list, NULL);
+	return (user*)((*list)->data);
+}
+
+/**
+ * 根据 id 查找交易类别
+ */
+transaction_class* getTransactionClassByID(sqlite3* db, const int id) {
+	char sql[1024] = { 0 };
+	llist* list = llist_create(NULL);
+	sprintf(sql, "select * from transaction_classes where id = %d;", id);
+	sqlite3_exec(db, sql, callback_transaction_class, list, NULL);
+	return (transaction_class*)((*list)->data);
+}
+/**
+ * 根据交易类别的名字查找交易类别
+ */
+transaction_class* getTransactionClassByName(sqlite3* db, char* name)
+{
+	char sql[1024] = { 0 };
+	llist* list = llist_create(NULL);
+	sprintf(sql, "select * from transaction_classes where name = %s;", name);
+	sqlite3_exec(db, sql, callback_transaction_class, list, NULL);
+	return (transaction_class*)((*list)->data);
+}
+
+/**
+ * 根据交易 ID 查询交易信息
+ */
+transaction* getTransactionByID(sqlite3 *db, const int id) {
 	char sql[1024] = { 0 };
 	llist* list = llist_create(NULL);
 	sprintf(sql, "select * from transactions;");
 	sqlite3_exec(db, sql, callback_transaction, list, NULL);
-	return *((transaction *)((*list)->data));
+	return (transaction *)((*list)->data);
 }
+/**
+ * 获取所有交易信息
+ */
 llist* getAllTransaction()
 {
 	llist* result = llist_create(NULL);
@@ -131,7 +167,9 @@ llist* getAllTransaction()
 	sqlite3_exec(db, sql, callback_transaction, result, NULL);
 	return result;
 }
-
+/**
+ * 获取所有交易类别
+ */
 llist* getAllTransactionClass()
 {
 	llist* result = llist_create(NULL);
@@ -140,6 +178,9 @@ llist* getAllTransactionClass()
 	sqlite3_exec(db, sql, callback_transaction_class, result, NULL);
 	return result;
 }
+/**
+ * 获取所有用户信息
+ */
 llist* getAllUser()
 {
 	llist* result = llist_create(NULL);
@@ -148,11 +189,13 @@ llist* getAllUser()
 	sqlite3_exec(db, sql, callback_user, result, NULL);
 	return result;
 }
-// Insert into user table. Set id = 0 to auto select id.
+/**
+ * 插入到用户表，调用函数时将 id 设置为 0 可以让数据库自动（递增地）分配一个 id
+ */
 bool insertIntoUser(sqlite3* db, int id, char* name, char* password, char* email) {
-	char* zErrMsg = 0;
+	char* zErrMsg = 0; // 错误信息
 	char sql[1024] = {0};
-	if (id != 0)
+	if (id != 0) // 判断是否自动分配id
 		sprintf(sql, "insert into user values(%d,'%s','%s','%s');", id, name, password, email);
 	else
 		sprintf(sql,"insert into user(name,password,email_addr) values('%s','%s','%s');", name, password, email);
@@ -163,14 +206,17 @@ bool insertIntoUser(sqlite3* db, int id, char* name, char* password, char* email
 	}
 	else {
 		fprintf(stderr, "inserting into user table failed: %s\n", zErrMsg);
-		return true;
+		sqlite3_free(zErrMsg); 
+		return false;
 	}
 }
-// Insert into user table. Set id = 0 to auto select id.
+/**
+ * 插入到交易类别表，调用函数时将 id 设置为 0 可以让数据库自动（递增地）分配一个 id
+ */
 bool insertIntoTransactionClass(sqlite3* db, int id, char* class_name) {
-	char* zErrMsg = 0;
+	char* zErrMsg = 0; // 错误信息
 	char sql[1024] = { 0 };
-	if (id != 0)
+	if (id != 0) // 判断是否自动分配id
 		sprintf(sql, "insert into transaction_classes values(%d,'%s');", id, class_name);
 	else
 		sprintf(sql, "insert into transaction_classes(class_name) values('%s');", class_name);
@@ -180,14 +226,18 @@ bool insertIntoTransactionClass(sqlite3* db, int id, char* class_name) {
 	}
 	else {
 		fprintf(stderr, "inserting into transaction_classes table failed: %s\n", zErrMsg);
-		return true;
+		sqlite3_free(zErrMsg);
+		return false;
 	}
 }
-// Insert into transaction table. Set id = 0 to auto select id. Note that transaction date should be in correct format.
+/**
+ * 插入到交易表，调用函数时将 id 设置为 0 可以让数据库自动（递增地）分配一个 id。
+ * 其中 transaction_date 的格式应当为 yyyy-mm-dd 例如：2019-11-11
+ */
 bool insertIntoTransactions(sqlite3* db, const int id, const bool type, const double amount, const int class_id, const int user_id, char* transaction_date) {
 	char* zErrMsg = 0;
 	char sql[1024] = { 0 };
-	if (id != 0)
+	if (id != 0) // 判断是否自动分配id
 		sprintf(sql, "insert into transactions values(%d,%s,%lf,%d,%d,'%s');",id, type ? "true" : "false",amount,class_id,user_id,transaction_date);
 	else
 		sprintf(sql, "insert into transactions(type,amount,class_id,user_id,transaction_date) values(%s,%lf,%d,%d,'%s');", type ? "true" : "false", amount, class_id, user_id, transaction_date);
@@ -197,6 +247,7 @@ bool insertIntoTransactions(sqlite3* db, const int id, const bool type, const do
 	}
 	else {
 		fprintf(stderr, "inserting into transactions table failed: %s\n", zErrMsg);
-		return true;
+		sqlite3_free(zErrMsg);
+		return false;
 	}
 }

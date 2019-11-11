@@ -25,8 +25,12 @@
     <ClCompile Include="llist.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="model.c" />
+    <ClCompile Include="print.c" />
     <ClCompile Include="process_record.c" />
+    <ClCompile Include="user_login.c" />
     <ClCompile Include="utilities.c" />
+    <ClCompile Include="view.c" />
+    <ClCompile Include="暂未实现的功能.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="db_connect.h" />
@@ -34,8 +38,11 @@
     <ClInclude Include="include\sqlite\sqlite3ext.h" />
     <ClInclude Include="llist.h" />
     <ClInclude Include="model.h" />
+    <ClInclude Include="print.h" />
     <ClInclude Include="process_record.h" />
+    <ClInclude Include="user_login.h" />
     <ClInclude Include="utilities.h" />
+    <ClInclude Include="view.h" />
     <ClInclude Include="暂未实现的功能.h" />
   </ItemGroup>
   <ItemGroup>

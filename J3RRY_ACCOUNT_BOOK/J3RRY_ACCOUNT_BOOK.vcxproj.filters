@@ -39,6 +39,18 @@
     <ClCompile Include="utilities.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="view.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="print.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="暂未实现的功能.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="user_login.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="model.h">
@@ -63,6 +75,15 @@
       <Filter>源文件</Filter>
     </ClInclude>
     <ClInclude Include="utilities.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="view.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="print.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="user_login.h">
       <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>

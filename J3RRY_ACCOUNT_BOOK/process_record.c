@@ -55,7 +55,7 @@ int create_transaction_class(char* transaction_class_name) {
  * @param transaction_date 交易日期，如果为 NULL 则设置为系统时间的今天, 在 utilities.h 中有获取当前系统日期的函数。
  */
 bool record_transaction(int type, double amount, int transaction_class_id, int user_id, const char* transaction_date) {
-	if (transaction_date) {
+	if (!transaction_date) {
 		transaction_date = getSystemDate();
 	}
 	if (!insertIntoTransactions(db, 0, type, amount, transaction_class_id, user_id, transaction_date)) {

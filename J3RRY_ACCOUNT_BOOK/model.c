@@ -152,7 +152,7 @@ transaction_class* getTransactionClassByName(sqlite3* db, char* name)
 transaction* getTransactionByID(sqlite3 *db, const int id) {
 	char sql[1024] = { 0 };
 	llist* list = llist_create(NULL);
-	sprintf(sql, "select * from transactions;");
+	sprintf(sql, "select * from transactions where id =%d;",id);
 	sqlite3_exec(db, sql, callback_transaction, list, NULL);
 	return (transaction *)((*list)->data);
 }

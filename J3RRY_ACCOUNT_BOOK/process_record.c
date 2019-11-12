@@ -41,7 +41,7 @@ void printAllUser()
  */
 int create_transaction_class(char* transaction_class_name) {
 	if (!insertIntoTransactionClass(db, 0, transaction_class_name)) {
-		printf("This transaction class already exists.\n");
+		// printf("This transaction class already exists.\n");
 		return -1;
 	}
 	transaction_class* data = getTransactionClassByName(db, transaction_class_name);

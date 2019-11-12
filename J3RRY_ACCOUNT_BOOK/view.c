@@ -8,6 +8,7 @@
 #include <conio.h>
 #include "user_login.h"
 #include "process_record.h"
+#include "utilities.h"
 VOID WINAPI SetConsoleColors(WORD attribs) {
 	HANDLE hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_SCREEN_BUFFER_INFOEX cbi;
@@ -410,6 +411,68 @@ void importDataInteractions()
 		printRed("You're not logged in. Please log in first!\n");
 		return;
 	}
+	char filename[100] = { 0 };
+	char buffer[100] = { 0 };
+	printf("Please enter the name of the sql file: ");
+	scanf("%s", filename);
+	FILE* file = fopen(filename, "r");
+	while (!file)
+	{
+		printRed("The file name you entered is not valid.  ");
+		printf("Would you like to retry(y or n):");
+		gets_s(buffer, sizeof(buffer));
+		while (strcmp(buffer, "y") != 0 && strcmp(buffer, "n") != 0 && strcmp(buffer, "yes") != 0 && strcmp(buffer, "no") != 0)
+		{
+			printf("Please input y or n: ");
+			gets_s(buffer, sizeof(buffer));
+		}
+		if (strcmp(buffer, "n") == 0 || strcmp(buffer, "no") == 0)
+		{
+			return;
+		}
+		printf("Please enter the name of the sql file: ");
+		scanf("%s", filename);
+		file = fopen(filename, 'r');
+	}
+	char u_name[100];
+	char u_password[100];
+	char u_email[100];
+	
+	fgets(u_name, sizeof(u_name),file);
+	fgets(u_password, sizeof(u_password), file);
+	fgets(u_email, sizeof(u_email), file);
+	trim(u_name);
+	trim(u_password);
+	trim(u_email);
+	user_id = user_sign_up(u_name, u_password, u_password, u_email);
+	if (user_id == -1)
+	{
+		user* u = getUserByName(db, u_name);
+		user_id = u->id;// TODO: Extremely Unsafe here.
+	}
+	
+	fprintf(stdout, "%s\n%s\n%s\n", u_name, u_password, u_email);
+	char type[10];
+	char amount[10];
+	char class_name[100];
+	char date[100];
+	while(fgets(type,sizeof(type),file))
+	{
+		trim(type);
+		fgets(amount, sizeof(amount), file);
+		trim(amount);
+		fgets(class_name, sizeof(class_name), file);
+		trim(class_name);
+		int class_id = create_transaction_class(class_name);
+		if (class_id == -1)
+		{
+			class_id = find_transaction_class(class_name);
+		}
+		fgets(date, sizeof(date), file);
+		trim(date);
+		record_transaction(strcmp(type, "1") == 0 ? 1 : 0, atof(amount), class_id, user_id, date);
+	}
+	fclose(file);
 }
 
 void exportDataInteractions()
@@ -419,4 +482,43 @@ void exportDataInteractions()
 		printRed("You're not logged in. Please log in first!\n");
 		return;
 	}
+	char filename[100] = { 0 };
+	char buffer[100] = { 0 };
+	printf("Please enter the name of the where you want to store your data: ");
+	scanf("%s", filename);
+	FILE* file = fopen(filename, "w");
+	while (!file)
+	{
+		printRed("The file name you entered is not valid.  ");
+		printf("Would you like to retry(y or n):");
+		gets_s(buffer, sizeof(buffer));
+		while (strcmp(buffer, "y") != 0 && strcmp(buffer, "n") != 0 && strcmp(buffer, "yes") != 0 && strcmp(buffer, "no") != 0)
+		{
+			printf("Please input y or n: ");
+			gets_s(buffer, sizeof(buffer));
+		}
+		if (strcmp(buffer, "n") == 0 || strcmp(buffer, "no") == 0)
+		{
+			return;
+		}
+		printf("Please enter the name of the sql file: ");
+		scanf("%s", filename);
+		file = fopen(filename, 'w');
+	}
+	user* current_u = getUserById(db, user_id);
+	fprintf(file, "%s\n%s\n%s\n", current_u->name, current_u->password, current_u->email_addr);
+	llist* transactions = getTransactionByUserId(user_id);
+	struct node* head = *transactions;
+	while (head->data != NULL)
+	{
+		const transaction t = *(transaction*)head->data;
+		transaction_class* tc = getTransactionClassByID(db, t.class_id);
+		fprintf(file, "%d\n%.2lf\n%s\n%s\n", t.type, t.amount, tc->class_name, t.transaction_date);
+		
+		head = head->next;
+		if (head == NULL)
+			break;
+	}
+	
+	fclose(file);
 }

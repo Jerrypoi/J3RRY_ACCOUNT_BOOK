@@ -8,6 +8,7 @@ extern "C" {
 	 * 获取当前系统时间，并以指定格式返回
 	 */
 	const char* getSystemDate();
+	void trim(char* s);
 #ifdef __cplusplus
 }
 #endif

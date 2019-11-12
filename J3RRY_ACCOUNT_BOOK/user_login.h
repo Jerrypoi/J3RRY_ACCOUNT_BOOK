@@ -1,5 +1,9 @@
 #ifndef USER_LOGIN_H
 #define USER_LOGIN_H
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern int user_id;
 /**
 * @return 返回值为用户的 id，若登录失败返回 -1,
@@ -15,5 +19,9 @@ int login(char* user_name, char* password);
  * @param password_confirm 用户第二次输入的密码，两次输入密码应当一致
  * @param email_address 用户邮箱地址
  */
-int sign_up(char* username, char* password, char* password_confirm, char* email_address);
+int user_sign_up(char* username, char* password, char* password_confirm, char* email_address);
+#ifdef __cplusplus
+}
+#endif
+
 #endif

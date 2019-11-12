@@ -30,7 +30,6 @@
     <ClCompile Include="user_login.c" />
     <ClCompile Include="utilities.c" />
     <ClCompile Include="view.c" />
-    <ClCompile Include="暂未实现的功能.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="db_connect.h" />
@@ -43,7 +42,6 @@
     <ClInclude Include="user_login.h" />
     <ClInclude Include="utilities.h" />
     <ClInclude Include="view.h" />
-    <ClInclude Include="暂未实现的功能.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="db.sql" />

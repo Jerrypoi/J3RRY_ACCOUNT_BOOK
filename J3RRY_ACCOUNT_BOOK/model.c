@@ -79,10 +79,10 @@ int callback_transaction(void* list, int argc, char** argv, char** azColName) {
 	data->type = atoi(argv[1]);
 	data->amount = atof(argv[2]);
 	data->class_id = atoi(argv[3]);
-	data->user_id = atoi(argv);
-	data->transaction_date = (char*)malloc(sizeof(char) * strlen(argv[4]));
-	if (argv[4] && data->transaction_date) {
-		strcpy(data->transaction_date, argv[4]);
+	data->user_id = atoi(argv[4]);
+	data->transaction_date = (char*)malloc(sizeof(char) * strlen(argv[5]) * 2);
+	if (argv[5] && data->transaction_date) {
+		strcpy(data->transaction_date, argv[5]);
 	}
 	else {
 		data->transaction_date = NULL;
@@ -141,7 +141,7 @@ transaction_class* getTransactionClassByName(sqlite3* db, char* name)
 {
 	char sql[1024] = { 0 };
 	llist* list = llist_create(NULL);
-	sprintf(sql, "select * from transaction_classes where name = %s;", name);
+	sprintf(sql, "select * from transaction_classes where class_name ='%s';", name);
 	sqlite3_exec(db, sql, callback_transaction_class, list, NULL);
 	return (transaction_class*)((*list)->data);
 }
@@ -205,7 +205,7 @@ bool insertIntoUser(sqlite3* db, int id, char* name, char* password, char* email
 		return true;
 	}
 	else {
-		fprintf(stderr, "inserting into user table failed: %s\n", zErrMsg);
+		//fprintf(stderr, "inserting into user table failed: %s\n", zErrMsg);
 		sqlite3_free(zErrMsg); 
 		return false;
 	}
@@ -225,7 +225,7 @@ bool insertIntoTransactionClass(sqlite3* db, int id, char* class_name) {
 		return true;
 	}
 	else {
-		fprintf(stderr, "inserting into transaction_classes table failed: %s\n", zErrMsg);
+		//fprintf(stderr, "inserting into transaction_classes table failed: %s\n", zErrMsg);
 		sqlite3_free(zErrMsg);
 		return false;
 	}
@@ -238,7 +238,7 @@ bool insertIntoTransactions(sqlite3* db, const int id, const bool type, const do
 	char* zErrMsg = 0;
 	char sql[1024] = { 0 };
 	if (id != 0) // 判断是否自动分配id
-		sprintf(sql, "insert into transactions values(%d,%s,%lf,%d,%d,'%s');",id, type ? "true" : "false",amount,class_id,user_id,transaction_date);
+		sprintf(sql, "insert into transactions values(%d,%s,%.2lf,%d,%d,'%s');",id, type ? "true" : "false",amount,class_id,user_id,transaction_date);
 	else
 		sprintf(sql, "insert into transactions(type,amount,class_id,user_id,transaction_date) values(%s,%lf,%d,%d,'%s');", type ? "true" : "false", amount, class_id, user_id, transaction_date);
 	int rc = sqlite3_exec(db, sql, NULL, NULL, &zErrMsg);
@@ -246,7 +246,7 @@ bool insertIntoTransactions(sqlite3* db, const int id, const bool type, const do
 		return true;
 	}
 	else {
-		fprintf(stderr, "inserting into transactions table failed: %s\n", zErrMsg);
+		//fprintf(stderr, "inserting into transactions table failed: %s\n", zErrMsg);
 		sqlite3_free(zErrMsg);
 		return false;
 	}

@@ -56,12 +56,16 @@ extern "C" {
 	 */
 	typedef struct transaction {
 		int id;
-		bool type;
+		bool type; // false 为收入， true 为支出
 		float amount;
 		int class_id;
 		int user_id;
 		char* transaction_date;
 	} transaction;
+	typedef struct amount_and_classid {
+		double amount;
+		int class_id;
+	} amount_and_classid;
 	/**
 	 * 下面一类函数是根据指定属性获取数据
 	 * 如果查找不成功，会返回 NULL

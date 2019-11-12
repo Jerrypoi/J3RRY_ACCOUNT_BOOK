@@ -45,9 +45,6 @@
     <ClCompile Include="print.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="暂未实现的功能.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="user_login.c">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -70,9 +67,6 @@
     </ClInclude>
     <ClInclude Include="include\sqlite\sqlite3ext.h">
       <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="暂未实现的功能.h">
-      <Filter>源文件</Filter>
     </ClInclude>
     <ClInclude Include="utilities.h">
       <Filter>源文件</Filter>

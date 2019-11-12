@@ -18,7 +18,8 @@ extern "C" {
 	 * @param sql_filename sql ÎÄ¼şÃû
 	 */
 	bool init_db(const char* sql_filename);
-	
+
+	bool drop_all_tables();
 #ifdef __cplusplus
 }
 #endif

@@ -45,7 +45,7 @@ extern "C" {
 		if (rc != SQLITE_OK)
 		{
 			// 创建表失败，输出错误信息
-			fprintf(stderr, "Create tables failed:\n%s\n", error_msg);
+			//fprintf(stderr, "Create tables failed:\n%s\n", error_msg);
 			sqlite3_free(error_msg);
 			return false;
 		}
@@ -54,6 +54,14 @@ extern "C" {
 			return true;
 		}
 
+	}
+
+	bool drop_all_tables()
+	{
+		char sql[1024];
+		sprintf(sql, "drop table user;\n drop table transaction_classes;\n drop table transactions;");
+		const int result = sqlite3_exec(db, sql, NULL, NULL, NULL);
+		return result == SQLITE_OK;
 	}
 #ifdef __cplusplus
 }

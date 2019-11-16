@@ -37,10 +37,11 @@ void printAllUser()
 
 /**
  * @return 创建交易类别，若创建成功返回创建好的 id，若失败返回 -1
- * @param transaction_class 交易类别
+ * @param transaction_class_name 交易类别
  */
 int create_transaction_class(char* transaction_class_name) {
-	if (!insertIntoTransactionClass(db, 0, transaction_class_name)) {
+	if (!insertIntoTransactionClass(db, 0, transaction_class_name))
+	{
 		// printf("This transaction class already exists.\n");
 		return -1;
 	}

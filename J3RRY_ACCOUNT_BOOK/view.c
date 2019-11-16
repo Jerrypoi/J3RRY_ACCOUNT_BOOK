@@ -9,6 +9,7 @@
 #include "user_login.h"
 #include "process_record.h"
 #include "utilities.h"
+// 设置控制台的颜色
 VOID WINAPI SetConsoleColors(WORD attribs) {
 	HANDLE hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_SCREEN_BUFFER_INFOEX cbi;
@@ -22,7 +23,7 @@ void ACCOUNT_BOOK_MAIN_LOOP()
 	//SetConsoleColors(  FOREGROUND_RED | FOREGROUND_INTENSITY);
 	printf("欢迎使用杰瑞记账本\n");
 	printRed("Enter 'h' to display help menu\n");
-	char line[1024 * 10] = { 0 };
+	char line[1024 * 10] = { 0 }; // 读入缓冲为 10KB
 	char prompt[] = "account_book> ";
 	while (1)
 	{
@@ -60,7 +61,7 @@ void ACCOUNT_BOOK_MAIN_LOOP()
 		{
 			exportDataInteractions();
 		}
-		else if (strcmp(line, "id") == 0) // 内部使用，获取当前登录id
+		else if (strcmp(line, "id") == 0) // 内部调试使用，获取当前登录id
 		{
 			printf("Your user id is: %d\n", user_id);
 
@@ -82,6 +83,9 @@ void ACCOUNT_BOOK_MAIN_LOOP()
 
 	}
 }
+/**
+ * 输出提示信息
+ */
 void printHelpMessage()
 {
 	char spaces[] = "\t\t\t";
@@ -101,50 +105,34 @@ void loginInteractions()
 	char prompt[] = "account_book> ";
 	char user_name[64];
 	char password[64];
+	
 	while(login_sucess == false)
 	{
-		int index_to_password = 0;
 		
 		printf("Please enter your name and password:\n");
 		printf("User name> ");
 		scanf("%s", user_name);
 		getchar();
 		printf("Password> ");
-		char ch;
-		while ((ch = _getch()) != '\r')
-		{
-			if (ch != 8)
-			{
-				password[index_to_password++] = ch;
-				putchar('*');
-			}
-			else if(index_to_password != 0)
-			{
-				
-				index_to_password--;
-				putchar('\b');
-				putchar(' ');
-				putchar('\b');
-			}
-		}
-		password[index_to_password] = '\0';
+		read_password(password); // 通过特殊方式读取用户输入的密码，使用户输入的密码不明文显示
 		printf("\n");
 
-		user_id = login(user_name, password);
-		if (user_id == -1)
+		user_id = login(user_name, password); // 尝试进行登录，user_id 为定义在 user_login 的全局变量
+		if (user_id == -1) // id = -1 则说明登录失败
 		{
+			// 询问用户是否重新尝试
 			char buffer[1024] = { 0 };
 			printRed("You entered username or password wrong!\n");
 			printf("Would you like to retry(y or n):");
-			gets_s(buffer, sizeof(buffer));
+			gets_s(buffer, sizeof(buffer));  // 读取用户输入的 y 或者 n，如果是别的就让用户重新输入
 			while (strcmp(buffer,"y") != 0 && strcmp(buffer,"n") != 0 && strcmp(buffer, "yes") != 0 && strcmp(buffer, "no") != 0)
 			{
 				printf("Please input y or n: ");
 				gets_s(buffer, sizeof(buffer));
 			}
-			if (strcmp(buffer,"n") == 0 || strcmp(buffer,"no") == 0)
+			if (strcmp(buffer,"n") == 0 || strcmp(buffer,"no") == 0) // 如果不尝试了就结束函数，尝试的话就继续循环。
 			{
-				return;
+				return; 
 			}
 			
 		}
@@ -172,53 +160,19 @@ void signUpInteractions()
 		printf("Please enter your name:\nUser Name> ");
 		scanf("%s", user_name);
 		printf("Password> ");
-		int index_to_password = 0;
-		char ch;
-		while ((ch = _getch()) != '\r')
-		{
-			if (ch != 8)
-			{
-				password[index_to_password++] = ch;
-				putchar('*');
-			}
-			else if (index_to_password != 0)
-			{
-
-				index_to_password--;
-				putchar('\b');
-				putchar(' ');
-				putchar('\b');
-			}
-		}
-		password[index_to_password] = '\0';
+		read_password(password); // 读取用户输入的密码
 		printf("\n");
 		printf("Confirm Password> ");
-		index_to_password = 0;
-		while ((ch = _getch()) != '\r')
-		{
-			if (ch != 8)
-			{
-				password_confirm[index_to_password++] = ch;
-				putchar('*');
-			}
-			else if (index_to_password != 0)
-			{
-
-				index_to_password--;
-				putchar('\b');
-				putchar(' ');
-				putchar('\b');
-			}
-		}
-		password_confirm[index_to_password] = '\0';
+		read_password(password_confirm);  // 读取用户输入的确认密码
 		printf("\n");
 		printf("Email> ");
 		scanf("%s", email);
 		getchar();
 		// printf("name:%s\npasswd:%s\npassconfirm:%s\nemail:%s\n", user_name, password, password_confirm, email);
-		user_id = user_sign_up(user_name, password, password_confirm, email);
-		if (user_id == -1)
+		user_id = user_sign_up(user_name, password, password_confirm, email); // 尝试进行注册
+		if (user_id == -1)  // user_id = -1 说明注册失败
 		{
+			// 询问用户是否重新尝试
 			char buffer[1024] = { 0 };
 			printf("Would you like to retry(y or n):");
 			gets_s(buffer, sizeof(buffer));
@@ -252,21 +206,29 @@ static int callback_amount_and_classid(void* list, int argc, char** argv, char**
 	llist_push((llist*)list, aac);
 	return 0;
 }
+/**
+ * 显示数据
+ */
 void getDataInteractions()
 {
-	if (user_id == -1)
+	if (user_id == -1) // 显示数据前必须登录
 	{
 		printRed("You're not logged in. Please log in first!\n");
 		return;
 	}
 	char group[100] = { 0 };
 	char spaces[] = "\t\t\t";
+	// 询问用户已哪种方式展示数据，目前支持三种：
+	// 1. 展示每一条交易记录
+	// 2. 分别展示收入与支出的总额，eg，收入 100 元，支出 20元。
+	// 3. 按照各个收支类别展示数据，eg， 微信收入100元，支付宝收入-10 元，现金收入 20 元
 	printf("please specify how to group your data:\n");
 	printf("all%sShow all your transactions, don't group.\n", spaces);
 	printf("type%sGroup your transactions by type(income or expenditure)\n",spaces);
 	printf("class%sGroup your transactions by its classes\n",spaces);
+
 	scanf("%s", group);
-	while(strcmp(group,"all") != 0 && strcmp(group,"type") != 0 && strcmp(group,"class") != 0)
+	while(strcmp(group,"all") != 0 && strcmp(group,"type") != 0 && strcmp(group,"class") != 0) // 如果用户输入不满足要求
 	{
 		printRed("Please enter all, type or class: ");
 		scanf("%s", group);
@@ -313,7 +275,7 @@ void getDataInteractions()
 		printf("Your income is %.2lf yuan and your expenditure is %.2lf yuan.\n", in_total, out_total);
 		printf("Your currently have %.2lf yuan in your account\n", in_total - out_total);
 	}
-	else
+	else // 按类别展示数据，由于如果使用链表做太麻烦，就写了一个sql和对应的 struct进行存储
 	{
 		printf("\n");
 		llist* aac_list = llist_create(NULL);
@@ -333,21 +295,23 @@ void getDataInteractions()
 		}
 	}
 }
-
+/**
+ * 记录交易数据
+ */
 void recordDataInteractions()
 {
+	if (user_id == -1) // 要登录后才能记录交易数据
+	{
+		printRed("You're not logged in. Please log in first!\n");
+		return;
+	}
 	char type[100] = { 0 };
 	bool type_id = false;
 	double amount = 0;
 	char buffer[100] = { 0 };
 	char class_name[1024] = { 0 };
 	char date[1024] = { 0 };
-	if (user_id == -1)
-	{
-		printRed("You're not logged in. Please log in first!\n");
-		return;
-	}
-	printf("Please enter transaction type(income or expenditure): ");
+	printf("Please enter transaction type(income or expenditure): "); // 首先输入交易类型，是收入还是支出
 	scanf("%s", type);
 	while (strcmp(type,"income") != 0 && strcmp(type,"expenditure")!=0 && strcmp(type,"i") != 0 && strcmp(type,"e") != 0)
 	{
@@ -362,10 +326,11 @@ void recordDataInteractions()
 	{
 		type_id = true;
 	}
+	// 提示用户输入交易类别
 	printf("Please enter class name: ");
 	scanf("%s", class_name);
 	int class_id = find_transaction_class(class_name);
-	if (class_id == -1)
+	if (class_id == -1) // 如果没有在数据库中找到对应的交易类别，询问用户是否创建一个。
 	{
 		printf("The class does not exist, would like to create it?(y or n): ");
 		gets_s(buffer, sizeof(buffer));
@@ -380,11 +345,13 @@ void recordDataInteractions()
 		}
 		else
 		{
-			class_id = create_transaction_class(class_name);
+			class_id = create_transaction_class(class_name); // 创建新的交易类别
 		}
 	}
+	// 输入金额
 	printf("Please enter amount: ");
 	scanf("%lf", &amount);
+	// 由于数据库设计要求，输入的金额应当大于0
 	while (amount < 0)
 	{
 		printf("Amount should be greater than 0, please enter again: ");
@@ -403,7 +370,62 @@ void recordDataInteractions()
 	printf("%lf\n%d\n%s\n", amount, class_id, date);
 	getchar();
 }
+/**
+ * 将交易信息写入文件
+ */
+void exportDataInteractions()
+{
+	if (user_id == -1)
+	{
+		printRed("You're not logged in. Please log in first!\n");
+		return;
+	}
+	char filename[100] = { 0 };
+	char buffer[100] = { 0 };
+	printf("Please enter the name of the where you want to store your data: ");
+	scanf("%s", filename);
+	FILE* file = fopen(filename, "w");
+	while (!file) // 判断文件是否合法，若不合法则让用户重新输入
+	{
+		printRed("The file name you entered is not valid.  ");
+		printf("Would you like to retry(y or n):");
+		gets_s(buffer, sizeof(buffer));
+		while (strcmp(buffer, "y") != 0 && strcmp(buffer, "n") != 0 && strcmp(buffer, "yes") != 0 && strcmp(buffer, "no") != 0)
+		{
+			printf("Please input y or n: ");
+			gets_s(buffer, sizeof(buffer));
+		}
+		if (strcmp(buffer, "n") == 0 || strcmp(buffer, "no") == 0)
+		{
+			return;
+		}
+		printf("Please enter the name of the sql file: ");
+		scanf("%s", filename);
+		file = fopen(filename, 'w');
+	}
+	// 记录当前用户数据
+	user* current_u = getUserById(db, user_id);
+	fprintf(file, "%s\n%s\n%s\n", current_u->name, current_u->password, current_u->email_addr);
+	llist* transactions = getTransactionByUserId(user_id);
+	struct node* head = *transactions;
+	while (head->data != NULL)
+	{
+		// 记录交易类型，交易金额，交易类别，交易日期
+		const transaction t = *(transaction*)head->data;
+		transaction_class* tc = getTransactionClassByID(db, t.class_id); // 因为我们的交易类别本来只有 id，所以要用id获取它的名字
+		fprintf(file, "%d\n%.2lf\n%s\n%s\n", t.type, t.amount, tc->class_name, t.transaction_date);
 
+		head = head->next;
+		if (head == NULL)
+			break;
+	}
+
+	fclose(file);
+}
+
+/**
+ * 从文件中读取交易信息
+ */
 void importDataInteractions()
 {
 	if (user_id == -1)
@@ -416,7 +438,7 @@ void importDataInteractions()
 	printf("Please enter the name of the sql file: ");
 	scanf("%s", filename);
 	FILE* file = fopen(filename, "r");
-	while (!file)
+	while (!file) // 如果用户输入的文件不合法，则让用户重新输入
 	{
 		printRed("The file name you entered is not valid.  ");
 		printf("Would you like to retry(y or n):");
@@ -437,7 +459,7 @@ void importDataInteractions()
 	char u_name[100];
 	char u_password[100];
 	char u_email[100];
-	
+	 // 从文件中读取各种数据，数据格式参见 export_data 函数中是如何写入的(
 	fgets(u_name, sizeof(u_name),file);
 	fgets(u_password, sizeof(u_password), file);
 	fgets(u_email, sizeof(u_email), file);
@@ -472,53 +494,5 @@ void importDataInteractions()
 		trim(date);
 		record_transaction(strcmp(type, "1") == 0 ? 1 : 0, atof(amount), class_id, user_id, date);
 	}
-	fclose(file);
-}
-
-void exportDataInteractions()
-{
-	if (user_id == -1)
-	{
-		printRed("You're not logged in. Please log in first!\n");
-		return;
-	}
-	char filename[100] = { 0 };
-	char buffer[100] = { 0 };
-	printf("Please enter the name of the where you want to store your data: ");
-	scanf("%s", filename);
-	FILE* file = fopen(filename, "w");
-	while (!file)
-	{
-		printRed("The file name you entered is not valid.  ");
-		printf("Would you like to retry(y or n):");
-		gets_s(buffer, sizeof(buffer));
-		while (strcmp(buffer, "y") != 0 && strcmp(buffer, "n") != 0 && strcmp(buffer, "yes") != 0 && strcmp(buffer, "no") != 0)
-		{
-			printf("Please input y or n: ");
-			gets_s(buffer, sizeof(buffer));
-		}
-		if (strcmp(buffer, "n") == 0 || strcmp(buffer, "no") == 0)
-		{
-			return;
-		}
-		printf("Please enter the name of the sql file: ");
-		scanf("%s", filename);
-		file = fopen(filename, 'w');
-	}
-	user* current_u = getUserById(db, user_id);
-	fprintf(file, "%s\n%s\n%s\n", current_u->name, current_u->password, current_u->email_addr);
-	llist* transactions = getTransactionByUserId(user_id);
-	struct node* head = *transactions;
-	while (head->data != NULL)
-	{
-		const transaction t = *(transaction*)head->data;
-		transaction_class* tc = getTransactionClassByID(db, t.class_id);
-		fprintf(file, "%d\n%.2lf\n%s\n%s\n", t.type, t.amount, tc->class_name, t.transaction_date);
-		
-		head = head->next;
-		if (head == NULL)
-			break;
-	}
-	
 	fclose(file);
 }

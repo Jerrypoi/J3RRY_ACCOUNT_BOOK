@@ -59,7 +59,7 @@ extern "C" {
 	bool drop_all_tables()
 	{
 		char sql[1024];
-		sprintf(sql, "drop table user;\n drop table transaction_classes;\n drop table transactions;");
+		sprintf(sql, "drop table transactions;\ndrop table user;\n drop table transaction_classes;\n ");
 		const int result = sqlite3_exec(db, sql, NULL, NULL, NULL);
 		return result == SQLITE_OK;
 	}

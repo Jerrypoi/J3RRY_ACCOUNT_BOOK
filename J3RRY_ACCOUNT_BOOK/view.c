@@ -20,6 +20,7 @@ VOID WINAPI SetConsoleColors(WORD attribs) {
 }
 void ACCOUNT_BOOK_MAIN_LOOP()
 {
+	
 	//SetConsoleColors(  FOREGROUND_RED | FOREGROUND_INTENSITY);
 	printf("欢迎使用杰瑞记账本\n");
 	printRed("Enter 'h' to display help menu\n");
@@ -94,6 +95,8 @@ void printHelpMessage()
 	printf("sign up%ssign up for a new account.\n", spaces);
 	printf("show%sshow your account.\n", spaces);
 	printf("record%srecord a new transaction.\n", spaces);
+	printf("import%simport data from outside file\n", spaces);
+	printf("export%sexport data to outside file\n", spaces);
 	printf("quit(q)%squit this program.\n", spaces);
 }
 /**

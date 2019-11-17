@@ -48,6 +48,9 @@
     <ClCompile Include="user_login.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="viewGUI.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="model.h">
@@ -78,6 +81,9 @@
       <Filter>源文件</Filter>
     </ClInclude>
     <ClInclude Include="user_login.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="viewGUI.h">
       <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>

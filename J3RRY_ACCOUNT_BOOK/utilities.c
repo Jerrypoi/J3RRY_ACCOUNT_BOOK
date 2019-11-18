@@ -80,7 +80,9 @@ int check_valid_email(char* email)
 	return 1;
 	
 }
-
+/**
+ * 检查用户输入的日期是否合法
+ */
 int check_valid_date(const char* date)
 {
 	if (date == NULL)
@@ -90,6 +92,7 @@ int check_valid_date(const char* date)
 	char day[10] = { 0 };
 	int index_to_date = 0;
 	int index_to_others = 0;
+	// 将用户输入的日期分别按年月日读出来
 	while(date[index_to_date] != '-')
 	{
 		year[index_to_others++] = date[index_to_date++];
@@ -106,6 +109,7 @@ int check_valid_date(const char* date)
 	{
 		day[index_to_others++] = date[index_to_date++];
 	}
+	// 将读出来的年月日转换成 int 形进行比较。
 	const int i_year = atoi(year);
 	const int i_month = atoi(month);
 	const int i_day = atoi(day);

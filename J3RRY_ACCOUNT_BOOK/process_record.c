@@ -39,7 +39,7 @@ void printAllUser()
  * @return 创建交易类别，若创建成功返回创建好的 id，若失败返回 -1
  * @param transaction_class_name 交易类别
  */
-int create_transaction_class(char* transaction_class_name) {
+int create_transaction_class(const char* transaction_class_name) {
 	if (!insertIntoTransactionClass(db, 0, transaction_class_name))
 	{
 		// printf("This transaction class already exists.\n");
@@ -70,7 +70,7 @@ bool record_transaction(int type, double amount, int transaction_class_id, int u
  * @return 返回输入的交易类别的 id，如果不存在则返回 -1
  * @param transaction_class_name 交易类别
  */
-int find_transaction_class(char* transaction_class_name) {
+int find_transaction_class(const char* transaction_class_name) {
 	transaction_class* data = getTransactionClassByName(db, transaction_class_name);
 	if (!data) {
 		return -1;

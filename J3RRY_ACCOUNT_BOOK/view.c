@@ -27,9 +27,13 @@ void ACCOUNT_BOOK_MAIN_LOOP()
 	printRed("Enter 'h' to display help menu\n");
 	char line[1024 * 10] = { 0 }; // 读入缓冲为 10KB
 	char prompt[] = "account_book> ";
+	bool print_prompt = true;
 	while (1)
 	{
-		printf("%s", prompt);
+		if (print_prompt)
+			printf("%s", prompt);
+		else
+			print_prompt = true;
 		char* res = gets_s(line, sizeof(line));
 		if (line == NULL || res == NULL) // 使用 res 判断是否为 EOF
 		{
@@ -47,6 +51,10 @@ void ACCOUNT_BOOK_MAIN_LOOP()
 		{
 			signUpInteractions();
 		}
+		else if (strcmp(line, "logout") == 0 || strcmp(line,"log out") == 0) // 导出数据
+		{
+			logoutInteractions();
+		}
 		else if(strcmp(line,"search") == 0 || strcmp(line, "show") == 0) // 显示数据
 		{
 			getDataInteractions();
@@ -55,27 +63,30 @@ void ACCOUNT_BOOK_MAIN_LOOP()
 		{
 			recordDataInteractions();
 		}
-		else if(strcmp(line,"import") == 0) // 导出数据
+		else if(strcmp(line,"import") == 0) // 导入数据
 		{
 			importDataInteractions();
 		}
-		else if(strcmp(line,"export") == 0) // 导入数据
+		else if(strcmp(line,"export") == 0) // 导出数据
 		{
 			exportDataInteractions();
 		}
 		else if (strcmp(line, "id") == 0) // 内部调试使用，获取当前登录id
 		{
 			printf("Your user id is: %d\n", user_id);
-
 		}
 		else if(strcmp(line,"q") == 0 || strcmp(line,"quit") == 0)  // 退出程序
 		{
 			printf("Bye\n");
 			break;
 		}
-		else if(strcmp(line," ") == 0 || strcmp(line,"\n") == 0 || strcmp(line,"") == 0)
+		else if(strcmp(line," ") == 0 || strcmp(line,"\n") == 0)
 		{
 			
+		}
+		else if(strcmp(line, "") == 0)
+		{
+			print_prompt = false; // 防止出现重复输出两个提示符的情况
 		}
 		else
 		{
@@ -94,6 +105,7 @@ void printHelpMessage()
 	printf("help(h)%sshow this menu.\n",spaces);
 	printf("login%slog into your account.\n", spaces);
 	printf("sign up%ssign up for a new account.\n", spaces);
+	printf("log out%slog out your current account.\n", spaces);
 	printf("show%sshow your account.\n", spaces);
 	printf("record%srecord a new transaction.\n", spaces);
 	printf("import%simport data from outside file\n", spaces);
@@ -122,19 +134,10 @@ void loginInteractions()
 		user_id = login(user_name, password); // 尝试进行登录，user_id 为定义在 user_login 的全局变量
 		if (user_id == -1) // id = -1 则说明登录失败
 		{
-			// 询问用户是否重新尝试
-			char buffer[1024] = { 0 };
-			printRed("You entered username or password wrong!\n");
-			printf("Would you like to retry(y or n):");
-			gets_s(buffer, sizeof(buffer));  // 读取用户输入的 y 或者 n，如果是别的就让用户重新输入
-			while (strcmp(buffer,"y") != 0 && strcmp(buffer,"n") != 0 && strcmp(buffer, "yes") != 0 && strcmp(buffer, "no") != 0)
+			const bool do_retry = ask_for_retry("Your user name or password is wrong.");
+			if (!do_retry)
 			{
-				printf("Please input y or n: ");
-				gets_s(buffer, sizeof(buffer));
-			}
-			if (strcmp(buffer,"n") == 0 || strcmp(buffer,"no") == 0) // 如果不尝试了就结束函数，尝试的话就继续循环。
-			{
-				return; 
+				return;
 			}
 		}
 		
@@ -142,10 +145,25 @@ void loginInteractions()
 		{
 			login_sucess = true;
 			printf("Successfully logged in as %s\n",user_name);
+			printf("\n");
 		}
 	}
 	
 }
+
+void logoutInteractions()
+{
+	if (user_id == -1)
+		printRed("You're not logged in!\n");
+	else
+	{
+		user_id = -1;
+		printf("You've logged out your current account\n");
+		printf("\n");
+	}
+	return;
+}
+
 /**
  * 注册交互逻辑
  */
@@ -169,19 +187,19 @@ void signUpInteractions()
 		printf("Email> ");
 		scanf("%s", email);
 		getchar();
+		while (!check_valid_email(email))
+		{
+			const bool do_retry = ask_for_retry("Your email address is not valid.");
+			if (!do_retry)
+				return;	
+			printf("Email> ");
+			scanf("%s", email);
+		}
 		user_id = user_sign_up(user_name, password, password_confirm, email); // 尝试进行注册
 		if (user_id == -1)  // user_id = -1 说明注册失败
 		{
-			// 询问用户是否重新尝试
-			char buffer[1024] = { 0 };
-			printf("Would you like to retry(y or n):");
-			gets_s(buffer, sizeof(buffer));
-			while (strcmp(buffer, "y") != 0 && strcmp(buffer, "n") != 0 && strcmp(buffer, "yes") != 0 && strcmp(buffer, "no") != 0)
-			{
-				printf("Please input y or n: ");
-				gets_s(buffer, sizeof(buffer));
-			}
-			if (strcmp(buffer, "n") == 0 || strcmp(buffer, "no") == 0)
+			const bool do_retry = ask_for_retry(NULL);
+			if (!do_retry)
 			{
 				return;
 			}
@@ -222,11 +240,12 @@ void getDataInteractions()
 	// 1. 展示每一条交易记录
 	// 2. 分别展示收入与支出的总额，eg，收入 100 元，支出 20元。
 	// 3. 按照各个收支类别展示数据，eg， 微信收入100元，支付宝收入-10 元，现金收入 20 元
+	printf("\n");
 	printf("please specify how to group your data:\n");
 	printf("all%sShow all your transactions, don't group.\n", spaces);
 	printf("type%sGroup your transactions by type(income or expenditure)\n",spaces);
 	printf("class%sGroup your transactions by its classes\n",spaces);
-
+	printf("\nMethod to group data: ");
 	scanf("%s", group);
 	while(strcmp(group,"all") != 0 && strcmp(group,"type") != 0 && strcmp(group,"class") != 0) // 如果用户输入不满足要求
 	{
@@ -236,6 +255,7 @@ void getDataInteractions()
 	llist* transactions = getTransactionByUserId(user_id);
 	if (strcmp(group,"all") == 0)
 	{
+		printf("\n");
 		struct node* head = *transactions;
 		while (head->data != NULL)
 		{
@@ -254,6 +274,7 @@ void getDataInteractions()
 	}
 	else if (strcmp(group, "type") == 0)
 	{
+		printf("\n");
 		double in_total = 0;
 		double out_total = 0;
 		struct node* head = *transactions;
@@ -280,7 +301,7 @@ void getDataInteractions()
 		printf("\n");
 		llist* aac_list = llist_create(NULL);
 		char sql[1024] = { 0 };
-		sprintf(sql, "select sum(case when type then amount else -amount end), class_id from transactions where user_id = %d group by class_id;", user_id);
+		sprintf(sql, "select sum(case when type then -amount else amount end), class_id from transactions where user_id = %d group by class_id;", user_id);
 		sqlite3_exec(db, sql, callback_amount_and_classid, aac_list, NULL);
 		struct node* head = *aac_list;
 		while (head->data != NULL)
@@ -328,7 +349,10 @@ void recordDataInteractions()
 	}
 	// 提示用户输入交易类别
 	printf("Please enter class name: ");
-	scanf("%s", class_name);
+	while (strcmp(class_name,"") == 0) // 由于前面有换行符没有读到，使用这种方法防止读入空串
+	{
+		gets_s(class_name, sizeof(class_name));
+	}
 	int class_id = find_transaction_class(class_name);
 	if (class_id == -1) // 如果没有在数据库中找到对应的交易类别，询问用户是否创建一个。
 	{
@@ -365,9 +389,17 @@ void recordDataInteractions()
 	}
 	else
 	{
+		while (!check_valid_date(date))
+		{
+			const bool do_retry = ask_for_retry("Your format for date is wrong.");
+			if (!do_retry)
+				return;
+			printf("Please enter transaction date(format: YYYY-MM-DD): ");
+			scanf("%s", date);
+		}
 		record_transaction(type_id, amount, class_id, user_id, date);
 	}
-	printf("%lf\n%d\n%s\n", amount, class_id, date);
+	printf("Recorded successfully!\n");
 	getchar();
 }
 /**
@@ -387,15 +419,8 @@ void exportDataInteractions()
 	FILE* file = fopen(filename, "w");
 	while (!file) // 判断文件是否合法，若不合法则让用户重新输入
 	{
-		printRed("The file name you entered is not valid.  ");
-		printf("Would you like to retry(y or n):");
-		gets_s(buffer, sizeof(buffer));
-		while (strcmp(buffer, "y") != 0 && strcmp(buffer, "n") != 0 && strcmp(buffer, "yes") != 0 && strcmp(buffer, "no") != 0)
-		{
-			printf("Please input y or n: ");
-			gets_s(buffer, sizeof(buffer));
-		}
-		if (strcmp(buffer, "n") == 0 || strcmp(buffer, "no") == 0)
+		const bool do_retry = ask_for_retry("The filename you entered is not valid.");
+		if (!do_retry)
 		{
 			return;
 		}
@@ -423,6 +448,7 @@ void exportDataInteractions()
 	fclose(file);
 }
 
+
 /**
  * 从文件中读取交易信息
  */
@@ -440,15 +466,8 @@ void importDataInteractions()
 	FILE* file = fopen(filename, "r");
 	while (!file) // 如果用户输入的文件不合法，则让用户重新输入
 	{
-		printRed("The file name you entered is not valid.  ");
-		printf("Would you like to retry(y or n):");
-		gets_s(buffer, sizeof(buffer));
-		while (strcmp(buffer, "y") != 0 && strcmp(buffer, "n") != 0 && strcmp(buffer, "yes") != 0 && strcmp(buffer, "no") != 0)
-		{
-			printf("Please input y or n: ");
-			gets_s(buffer, sizeof(buffer));
-		}
-		if (strcmp(buffer, "n") == 0 || strcmp(buffer, "no") == 0)
+		const bool do_retry = ask_for_retry("The filename you entered is not valid.");
+		if (!do_retry)
 		{
 			return;
 		}
@@ -465,14 +484,13 @@ void importDataInteractions()
 	fgets(u_email, sizeof(u_email), file);
 	trim(u_name);
 	trim(u_password);
-	trim(u_email);
-	user_id = user_sign_up(u_name, u_password, u_password, u_email);
-	if (user_id == -1)
+	trim(u_email); // 防止读到换行符等空白字符
+	user_id = user_sign_up(u_name, u_password, u_password, u_email); // 注册用户
+	if (user_id == -1) 
 	{
 		user* u = getUserByName(db, u_name);
-		user_id = u->id;// TODO: Extremely Unsafe here.
+		user_id = u->id;
 	}
-	
 	fprintf(stdout, "%s\n%s\n%s\n", u_name, u_password, u_email);
 	char type[10];
 	char amount[10];
@@ -495,4 +513,38 @@ void importDataInteractions()
 		record_transaction(strcmp(type, "1") == 0 ? 1 : 0, atof(amount), class_id, user_id, date);
 	}
 	fclose(file);
+}
+/**
+ * 询问用户是否重新尝试
+ * @param message 错误信息（要重新尝试的原因）
+ */
+bool ask_for_retry(const char* message)
+{
+	char* buffer = (char*)malloc(sizeof(char) * 100);
+	if (buffer == NULL)
+	{
+		return false; // 创建缓冲区失败，强制返回不继续
+	}
+	printf("\n");
+	if (message != NULL)
+	{
+		printRed("Error: ");
+		printRed(message);
+		printf("\n");
+	}
+	printf("Would you like to retry? (y or n): ");
+	gets_s(buffer, sizeof(buffer));
+	while (strcmp(buffer, "y") != 0 && strcmp(buffer, "n") != 0 && strcmp(buffer, "yes") != 0 && strcmp(buffer, "no") != 0)
+	{ // 如果输入不满足要求，则一直要求输入
+		printf("Please input y or n: ");
+		gets_s(buffer, sizeof(buffer));
+	}
+	if (strcmp(buffer, "n") == 0 || strcmp(buffer, "no") == 0)
+	{
+		free(buffer);
+		return false;
+	}
+	printf("\n");
+	free(buffer);
+	return true;
 }

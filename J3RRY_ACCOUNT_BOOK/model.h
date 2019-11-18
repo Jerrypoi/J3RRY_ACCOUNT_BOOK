@@ -73,14 +73,14 @@ extern "C" {
 	user* getUserById(sqlite3* db, int id);
 	transaction_class* getTransactionClassByID(sqlite3* db, int id);
 	transaction* getTransactionByID(sqlite3* db, int id);
-	user* getUserByName(sqlite3* db, char* name);
+	user* getUserByName(sqlite3* db,const char* name);
 	transaction_class* getTransactionClassByName(sqlite3* db, char* name);
 	
 	llist* getAllTransaction();
 	llist* getAllTransactionClass();
 	llist* getAllUser();
 	
-	bool insertIntoUser(sqlite3* db, int id, char* name, char* password, char* email);
+	bool insertIntoUser(sqlite3* db, int id,const char* name,const char* password,const char* email);
 	bool insertIntoTransactionClass(sqlite3* db, int id, char* class_name);
 	bool insertIntoTransactions(sqlite3* db, int id, bool type, double amount, int class_id, int user_id, char* transaction_date);
 	/**

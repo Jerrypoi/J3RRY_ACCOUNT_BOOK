@@ -110,7 +110,7 @@ user* getUserById(sqlite3 *db,const int id) {
 	return (user*)((*list)->data);
 }
 // 根据名字获取用户信息
-user* getUserByName(sqlite3* db, char* name)
+user* getUserByName(sqlite3* db,const char* name)
 {
 	user* data = (user*)malloc(sizeof(user));
 	if (!data)
@@ -192,7 +192,7 @@ llist* getAllUser()
 /**
  * 插入到用户表，调用函数时将 id 设置为 0 可以让数据库自动（递增地）分配一个 id
  */
-bool insertIntoUser(sqlite3* db, int id, char* name, char* password, char* email) {
+bool insertIntoUser(sqlite3* db, int id,const char* name,const char* password,const char* email) {
 	char* zErrMsg = 0; // 错误信息
 	char sql[1024] = {0};
 	if (id != 0) // 判断是否自动分配id

@@ -15,7 +15,7 @@ TEST(TEST_LIB, Test_list_lib)
 	EXPECT_EQ(*(int*)(*list)->data, 1);
 	llist_push(list, &second_data);
 	EXPECT_EQ(*(int*)(*list)->data, 2);
-	int* ptr = (int*)llist_pop(list);
+	int* ptr = static_cast<int*>(llist_pop(list));
 	EXPECT_EQ(*ptr, 2);
 	EXPECT_EQ(*(int*)(*list)->data, 1);
 	llist_free(list);
@@ -49,6 +49,7 @@ TEST(TestUserModel, TestGetAndInsert) {
 	EXPECT_EQ(strcmp(u->name, "jerry"), 0);
 	EXPECT_EQ(strcmp(u->password, "pwd"), 0);
 	EXPECT_EQ(strcmp(u->email_addr, "email"), 0);
+	sqlite3_close(db);
 }
 TEST(TestTransactionClassModel, TestGetAndInsert) {
 	EXPECT_EQ(1, 1);
@@ -76,6 +77,7 @@ TEST(TestTransactionClassModel, TestGetAndInsert) {
 	//EXPECT_NE(tc, NULL);
 	EXPECT_EQ(tc->id, 1);
 	EXPECT_EQ(strcmp(tc->class_name, "testclass"), 0);
+	sqlite3_close(db);
 }
 TEST(TestTransactionModel, TestGetAndInsert) {
 
@@ -102,7 +104,7 @@ TEST(TestTransactionModel, TestGetAndInsert) {
 	EXPECT_EQ(t->user_id, 1);
 	EXPECT_EQ(strcmp(t->transaction_date, "1999-01-01"), 0);
 	EXPECT_EQ(t->type, true);
-	
+	sqlite3_close(db);
 }
 TEST(TEST_FUNCTION, TEST_SIGN_UP)
 {
@@ -130,6 +132,7 @@ TEST(TEST_FUNCTION, TEST_SIGN_UP)
 
 	id = user_sign_up("jerry", "mima", "mima", "email"); // 测试重复插入的情况
 	EXPECT_EQ(id, -1);
+	sqlite3_close(db);
 }
 TEST(TEST_FUNCTION, Test_RECORD_TRNASACTION)
 {
@@ -156,6 +159,7 @@ TEST(TEST_FUNCTION, Test_RECORD_TRNASACTION)
 	EXPECT_EQ(t->user_id, 2);
 	EXPECT_EQ(strcmp(t->transaction_date, "1999-01-01"), 0);
 	EXPECT_EQ(t->type, true);
+	sqlite3_close(db);
 }
 TEST(TEST_FUNCTION,TEST_create_and_find_transaction_class)
 {
@@ -178,6 +182,7 @@ TEST(TEST_FUNCTION,TEST_create_and_find_transaction_class)
 	const int find_id2 = find_transaction_class("test_transaction_class2");
 	EXPECT_EQ(id1, find_id1);
 	EXPECT_EQ(id2, find_id2);
+	sqlite3_close(db);
 }
 TEST(TEST_FUNCTION,TEST_get_transaction_by_user_id)
 {
@@ -204,7 +209,7 @@ TEST(TEST_FUNCTION,TEST_get_transaction_by_user_id)
 	llist* list = getTransactionByUserId(2);
 	user u = *(user*)(*list)->data;
 	EXPECT_EQ(u.id, 2);
-	
+	sqlite3_close(db);
 }
 TEST(TEST_FUNCTION,Test_getsysdate)
 {
@@ -213,14 +218,36 @@ TEST(TEST_FUNCTION,Test_getsysdate)
 }
 TEST(TEST_FUNCTION,TEST_check_valid_email)
 {
-	char* str = "jerry@gmail.com";
+	char* str = const_cast<char*>("jerry@gmail.com");
 	ASSERT_EQ(check_valid_email(str), 1);
-	str = "jerrygmail.com";
+	str = const_cast<char*>("jerrygmail.com");
 	ASSERT_EQ(check_valid_email(str), 0);
-	str = "jerry@gmailcom";
+	str = const_cast<char*>("jerry@gmailcom");
 	ASSERT_EQ(check_valid_email(str), 0);
-	str = "jerry";
+	str = const_cast<char*>("jerry");
 	ASSERT_EQ(check_valid_email(str), 0);
+}
+
+TEST(TEST_FUNCTION,TEST_check_valid_date)
+{
+	char* date = "1999-01-01";
+	ASSERT_EQ(check_valid_date(date), 1);
+	date = "1999-1-1";
+	ASSERT_EQ(check_valid_date(date), 1);
+	date = "1999-01-1";
+	ASSERT_EQ(check_valid_date(date), 1);
+	date = "2000-01-01";
+	ASSERT_EQ(check_valid_date(date), 1);
+	date = "2000-10-31";
+	ASSERT_EQ(check_valid_date(date), 1);
+	date = "2013-1-31";
+	ASSERT_EQ(check_valid_date(date), 1);
+	date = "199-01-01";
+	ASSERT_EQ(check_valid_date(date), 0);
+	date = "2012-13-01";
+	ASSERT_EQ(check_valid_date(date), 0);
+	date = "2012-13-31";
+	ASSERT_EQ(check_valid_date(date), 0);
 }
 int main(int argc,char *argv[])
 {

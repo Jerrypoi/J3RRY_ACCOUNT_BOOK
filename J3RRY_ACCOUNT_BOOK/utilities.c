@@ -40,6 +40,8 @@ char* read_password(char* buffer)
 	{
 		buffer = (char*)malloc(sizeof(char) * 100);
 	}
+	if (buffer == NULL) // 创建 buffer 失败，返回空指针
+		return NULL;
 	char ch;
 	int index = 0;
 	while ((ch = (char)_getch()) != '\r')
@@ -53,17 +55,18 @@ char* read_password(char* buffer)
 		{
 
 			index--;
-			putchar('\b');
-			putchar(' ');
-			putchar('\b');
+			putchar('\b'); // 回退一格
+			putchar(' '); // 输出一个空格顶掉 *
+			putchar('\b'); // 再回退一个回到之前输出的空格之前。
 		}
 	}
 	buffer[index] = '\0';
-
-
 	return buffer;
 }
 
+/**
+ * 检查用户输入的邮箱地址是否为一个合法的邮箱地址
+ */
 int check_valid_email(char* email)
 {
 	if (email == NULL)
@@ -76,4 +79,41 @@ int check_valid_email(char* email)
 		return 0;
 	return 1;
 	
+}
+
+int check_valid_date(const char* date)
+{
+	if (date == NULL)
+		return 0;
+	char year[10] = { 0 };
+	char month[10] = { 0 };
+	char day[10] = { 0 };
+	int index_to_date = 0;
+	int index_to_others = 0;
+	while(date[index_to_date] != '-')
+	{
+		year[index_to_others++] = date[index_to_date++];
+	}
+	index_to_others = 0;
+	index_to_date++;
+	while (date[index_to_date] != '-')
+	{
+		month[index_to_others++] = date[index_to_date++];
+	}
+	index_to_date++;
+	index_to_others = 0;
+	while (date[index_to_date] != '\0')
+	{
+		day[index_to_others++] = date[index_to_date++];
+	}
+	const int i_year = atoi(year);
+	const int i_month = atoi(month);
+	const int i_day = atoi(day);
+	if (i_year < 1800 || i_year > 2200)
+		return 0;
+	if (i_month <= 0 || i_month > 12)
+		return 0;
+	if (i_day <= 0 || i_day > 31)
+		return 0;
+	return 1;
 }

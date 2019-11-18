@@ -16,6 +16,7 @@ extern "C" {
 	 * Read password 提示用户输入密码，将用户输入以 * 的形式返回。
 	 */
 	char* read_password(char* buffer);
+	int check_valid_email(char* email);
 #ifdef __cplusplus
 }
 #endif

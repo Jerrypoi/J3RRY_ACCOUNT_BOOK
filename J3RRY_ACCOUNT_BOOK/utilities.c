@@ -63,3 +63,17 @@ char* read_password(char* buffer)
 
 	return buffer;
 }
+
+int check_valid_email(char* email)
+{
+	if (email == NULL)
+		return 0;
+	char* p_str = strchr(email, '@');
+	if (p_str == NULL)
+		return 0;
+	p_str = strchr(p_str, '.');
+	if (p_str == NULL)
+		return 0;
+	return 1;
+	
+}

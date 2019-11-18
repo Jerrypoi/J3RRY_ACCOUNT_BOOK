@@ -211,7 +211,17 @@ TEST(TEST_FUNCTION,Test_getsysdate)
 	const char* str = getSystemDate();
 	EXPECT_NE(strstr(str, "2019"), nullptr); // This test case only works in 2019
 }
-
+TEST(TEST_FUNCTION,TEST_check_valid_email)
+{
+	char* str = "jerry@gmail.com";
+	ASSERT_EQ(check_valid_email(str), 1);
+	str = "jerrygmail.com";
+	ASSERT_EQ(check_valid_email(str), 0);
+	str = "jerry@gmailcom";
+	ASSERT_EQ(check_valid_email(str), 0);
+	str = "jerry";
+	ASSERT_EQ(check_valid_email(str), 0);
+}
 int main(int argc,char *argv[])
 {
 	testing::InitGoogleTest(&argc, argv);

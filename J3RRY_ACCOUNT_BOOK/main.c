@@ -7,6 +7,7 @@
 #include "utilities.h"
 #include "view.h"
 #include "viewGUI.h"
+#pragma warning( disable : 6031)  // Ignore specific warning message from visual studio.
 sqlite3* db;
 
 int main(int argc, char *argv[]){

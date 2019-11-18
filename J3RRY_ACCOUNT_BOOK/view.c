@@ -9,6 +9,7 @@
 #include "user_login.h"
 #include "process_record.h"
 #include "utilities.h"
+#pragma warning( disable : 6031) // Ignore specific warning message from visual studio.
 // 设置控制台的颜色
 VOID WINAPI SetConsoleColors(WORD attribs) {
 	HANDLE hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -108,10 +109,8 @@ void loginInteractions()
 	char prompt[] = "account_book> ";
 	char user_name[64];
 	char password[64];
-	
 	while(login_sucess == false)
 	{
-		
 		printf("Please enter your name and password:\n");
 		printf("User name> ");
 		scanf("%s", user_name);
@@ -137,7 +136,6 @@ void loginInteractions()
 			{
 				return; 
 			}
-			
 		}
 		
 		else
@@ -171,7 +169,6 @@ void signUpInteractions()
 		printf("Email> ");
 		scanf("%s", email);
 		getchar();
-		// printf("name:%s\npasswd:%s\npassconfirm:%s\nemail:%s\n", user_name, password, password_confirm, email);
 		user_id = user_sign_up(user_name, password, password_confirm, email); // 尝试进行注册
 		if (user_id == -1)  // user_id = -1 说明注册失败
 		{

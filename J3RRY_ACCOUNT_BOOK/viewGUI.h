@@ -1,9 +1,17 @@
+/**
+ * Warning:
+ * This file is not completed.
+ * DO NOT use any method from this file.
+ */
 #ifndef VIEWGUI_H
 #define VIEWGUI_H
 #ifdef __cplusplus
 extern "C"{
 
 #endif
+
+
+	
 	typedef enum keystroke {
 		UP = 72,
 		DOWN = 80,

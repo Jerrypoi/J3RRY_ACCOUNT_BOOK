@@ -6,8 +6,8 @@
 #include "print.h"
 #include <stdbool.h>
 #include <conio.h>
-#include "user_login.h"
-#include "process_record.h"
+#include "UserInteraction.h"
+#include "ProcessRecord.h"
 #include "utilities.h"
 #pragma warning( disable : 6031) // Ignore specific warning message from visual studio.
 // 设置控制台的颜色

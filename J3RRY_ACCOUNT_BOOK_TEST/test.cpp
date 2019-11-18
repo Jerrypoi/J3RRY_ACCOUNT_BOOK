@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
-#include "db_connect.h"
+#include "ConnectDB.h"
 #include "string.h"
 #include <string>
 #include "model.h"
-#include "user_login.h"
-#include "process_record.h"
+#include "UserInteraction.h"
+#include "ProcessRecord.h"
 #include "utilities.h"
 
 TEST(TEST_LIB, Test_list_lib)

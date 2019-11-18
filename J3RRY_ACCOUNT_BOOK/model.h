@@ -12,7 +12,7 @@ extern "C" {
 #include <string.h>
 #include "llist.h"
 #include <stdlib.h>
-#include "db_connect.h"
+#include "ConnectDB.h"
 #include "include/sqlite/sqlite3.h"
 	/*
 

@@ -19,28 +19,28 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="db_connect.c" />
+    <ClCompile Include="ConnectDB.c" />
     <ClCompile Include="include\sqlite\shell.c" />
     <ClCompile Include="include\sqlite\sqlite3.c" />
     <ClCompile Include="llist.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="model.c" />
     <ClCompile Include="print.c" />
-    <ClCompile Include="process_record.c" />
-    <ClCompile Include="user_login.c" />
+    <ClCompile Include="ProcessRecord.c" />
+    <ClCompile Include="UserInteraction.c" />
     <ClCompile Include="utilities.c" />
     <ClCompile Include="view.c" />
     <ClCompile Include="viewGUI.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="db_connect.h" />
+    <ClInclude Include="ConnectDB.h" />
     <ClInclude Include="include\sqlite\sqlite3.h" />
     <ClInclude Include="include\sqlite\sqlite3ext.h" />
     <ClInclude Include="llist.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="print.h" />
-    <ClInclude Include="process_record.h" />
-    <ClInclude Include="user_login.h" />
+    <ClInclude Include="ProcessRecord.h" />
+    <ClInclude Include="UserInteraction.h" />
     <ClInclude Include="utilities.h" />
     <ClInclude Include="view.h" />
     <ClInclude Include="viewGUI.h" />

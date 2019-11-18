@@ -18,12 +18,6 @@
     <ClCompile Include="model.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="process_record.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="db_connect.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="llist.c">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -45,21 +39,21 @@
     <ClCompile Include="print.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="user_login.c">
+    <ClCompile Include="viewGUI.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="viewGUI.c">
+    <ClCompile Include="ProcessRecord.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInteraction.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ConnectDB.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="model.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="process_record.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="db_connect.h">
       <Filter>源文件</Filter>
     </ClInclude>
     <ClInclude Include="llist.h">
@@ -80,10 +74,16 @@
     <ClInclude Include="print.h">
       <Filter>源文件</Filter>
     </ClInclude>
-    <ClInclude Include="user_login.h">
+    <ClInclude Include="viewGUI.h">
       <Filter>源文件</Filter>
     </ClInclude>
-    <ClInclude Include="viewGUI.h">
+    <ClInclude Include="ProcessRecord.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInteraction.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ConnectDB.h">
       <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>

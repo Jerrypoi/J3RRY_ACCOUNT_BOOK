@@ -1,10 +1,15 @@
+/**
+ * Warning:
+ * This file is not completed.
+ * DO NOT use any method from this file.
+ */
 #include "viewGUI.h"
 #include <Windows.h>
 #include <conio.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <ctype.h>
-#include "user_login.h"
+#include "UserInteraction.h"
 #define   NR(x)   (sizeof(x)/sizeof(x[0]+0))
 #define TITLE "J3RRY ACCOUNT BOOK"
 int getXPosForString(char * str)

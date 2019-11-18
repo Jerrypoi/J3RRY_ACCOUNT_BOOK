@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include "model.h"
 #include "include/sqlite/sqlite3.h"
-#include "db_connect.h"
-#include "process_record.h"
+#include "ConnectDB.h"
+#include "ProcessRecord.h"
 #include "utilities.h"
 #include "view.h"
 #include "viewGUI.h"
@@ -16,7 +16,7 @@ int main(int argc, char *argv[]){
 	init_db("./db.sql"); // 根据 SQL 文件创建表
 	//printAllUser();
 	ACCOUNT_BOOK_MAIN_LOOP();
-	//ACCOUNT_BOOK_GUI_MAIN_LOOP();
+	//ACCOUNT_BOOK_GUI_MAIN_LOOP(); // Not completed.
 	sqlite3_close(db);
     return 0;
 }
